@@ -24,7 +24,22 @@ PM> Install-Package jaytwo.Http.Polly
 
 ## Usage
 
-TODO
+This builds on the `IHttpClient` abstraction from the `jaytwo.Http` package.  This is meant for use with the `jaytwo.FluentHttp` package.
+
+It provides two retry policies: 
+* a default retry policy that retries 3 times, waiting 1, 3, and then 5 seconds between retries.
+* an exponential backoff retry policy, based on the [published AWS client retry behavior](https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html)
+
+
+```csharp
+// default retry policy
+var httpClient = new HttpClient().Wrap().WithDefaultRetryPolicy();
+```
+
+```csharp
+// exponential backoff retry policy
+var httpClient = new HttpClient().Wrap().WithExponentialBackoffRetryPolicy();
+```
 
 ---
 

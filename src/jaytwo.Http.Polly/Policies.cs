@@ -24,22 +24,21 @@ public class Policies
         (HttpStatusCode)509, // Bandwidth Limit Exceeded
     }.ToList().AsReadOnly();
 
-    public static IAsyncPolicy<HttpResponseMessage> DefaultRetryPolicy { get; } = GenerateDefaultRetryPolicy();
+    public static IAsyncPolicy<HttpResponseMessage> DefaultRetryPolicy { get; } = GenerateDefaultRetryPolicy().WithPolicyKey(nameof(DefaultRetryPolicy));
 
     public static IAsyncPolicy<HttpResponseMessage> GenerateDefaultRetryPolicy(IList<HttpStatusCode> retryableStatusCodes = default)
         => GenerateDefaultRetryPolicyBuilder(retryableStatusCodes ?? RetryableStatusCodes)
         .WaitAndRetryAsync(new[]
         {
-            TimeSpan.FromSeconds(0.5),
             TimeSpan.FromSeconds(1),
-            TimeSpan.FromSeconds(2),
-        })
-        .WithPolicyKey("DefaultRetryPolicy");
+            TimeSpan.FromSeconds(3),
+            TimeSpan.FromSeconds(5),
+        });
 
-    public static IAsyncPolicy<HttpResponseMessage> GenerateExponentialBackoffRetryPolicy(int retryCount = 3, int maxBackoffSeconds = 25, IList<HttpStatusCode> retryableStatusCodes = default)
+    public static IAsyncPolicy<HttpResponseMessage> GenerateExponentialBackoffRetryPolicy(int retryCount = 3, double maxBackoffSeconds = ExponentialBackoff.DefaultMaxBackoffSeconds, IList<HttpStatusCode> retryableStatusCodes = default)
         => GenerateDefaultRetryPolicyBuilder(retryableStatusCodes ?? RetryableStatusCodes)
-        .WaitAndRetryAsync(retryCount, x => ExponentialBackoff.GetExponentialBackoffSleep(x, maxBackoffSeconds))
-        .WithPolicyKey("ExponentialBackoffRetryPolicy");
+        .WaitAndRetryAsync(retryCount, x => new ExponentialBackoff(maxBackoffSeconds).GetExponentialBackoffSleep(x))
+        .WithPolicyKey($"ExponentialBackoffRetryPolicy.{retryCount}.{maxBackoffSeconds}");
 
     public static PolicyBuilder<HttpResponseMessage> GenerateDefaultRetryPolicyBuilder(IList<HttpStatusCode> retryableStatusCodes)
         => Policy.HandleResult<HttpResponseMessage>(response => retryableStatusCodes.Contains(response.StatusCode))

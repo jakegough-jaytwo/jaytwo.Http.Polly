@@ -53,6 +53,6 @@ public class IHttpClientExtensionsTests
 
         // Assert
         var typed = Assert.IsType<AsyncPolicyWrapper>(wrapped);
-        Assert.Equal("ExponentialBackoffRetryPolicy", typed.Policy.PolicyKey);
+        Assert.StartsWith("ExponentialBackoffRetryPolicy", typed.Policy.PolicyKey);
     }
 }

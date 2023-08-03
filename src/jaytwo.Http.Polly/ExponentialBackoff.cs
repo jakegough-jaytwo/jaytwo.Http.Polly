@@ -6,18 +6,24 @@ namespace jaytwo.Http.Polly;
 
 internal class ExponentialBackoff
 {
+    public const double DefaultMaxBackoffSeconds = 20;
+
     private static Random _random = new Random();
 
-    public static TimeSpan GetExponentialBackoffSleep(int retryCount, double maxBackoffSeconds)
-        => GetExponentialBackoffSleep(retryCount, maxBackoffSeconds, _random.NextDouble());
-
-    public static TimeSpan GetExponentialBackoffSleep(int retryCount, double maxBackoffSeconds, double random)
+    public ExponentialBackoff(
+        double maxBackoffSeconds = DefaultMaxBackoffSeconds,
+        Func<double> randomNumberProvider = null)
     {
-        if (random < 0 || random > 1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(random), "Value must be between 0 and 1");
-        }
+        MaxBackoffSeconds = maxBackoffSeconds;
+        RandomNumberProvider = randomNumberProvider ?? _random.NextDouble;
+    }
 
+    protected double MaxBackoffSeconds { get; private set; }
+
+    protected Func<double> RandomNumberProvider { get; private set; }
+
+    public TimeSpan GetExponentialBackoffSleep(int retryCount)
+    {
         // https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html
 
         // seconds_to_sleep_i = min(b*r^i, MAX_BACKOFF)
@@ -25,8 +31,10 @@ internal class ExponentialBackoff
         // r = 2
         // MAX_BACKOFF = 20 seconds
 
+        var random = RandomNumberProvider.Invoke();
+
         var backoffSeconds = Math.Min(
-            maxBackoffSeconds,
+            MaxBackoffSeconds,
             random * Math.Pow(2, retryCount));
 
         return TimeSpan.FromSeconds(backoffSeconds);

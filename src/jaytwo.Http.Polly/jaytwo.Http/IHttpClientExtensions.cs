@@ -17,6 +17,6 @@ public static class IHttpClientExtensions
     public static IHttpClient WithDefaultRetryPolicy(this IHttpClient httpClient)
         => WithPolicy(httpClient, Policies.DefaultRetryPolicy);
 
-    public static IHttpClient WithExponentialBackoffRetryPolicy(this IHttpClient httpClient, int retryCount = 3, int maxBackoffSeconds = 25)
+    public static IHttpClient WithExponentialBackoffRetryPolicy(this IHttpClient httpClient, int retryCount = 3, double maxBackoffSeconds = ExponentialBackoff.DefaultMaxBackoffSeconds)
         => WithPolicy(httpClient, Policies.GenerateExponentialBackoffRetryPolicy(retryCount, maxBackoffSeconds));
 }
