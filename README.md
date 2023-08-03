@@ -1,10 +1,10 @@
 # jaytwo.Http.Polly
 
 <p align="center">
-  <a href="https://jenkins.jaytwo.com/job/jaytwo.Http.Polly/job/master/" alt="Build Status (master)">
-    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=jaytwo.Http.Polly%2Fmaster&subject=build%20(master)" /></a>
-  <a href="https://jenkins.jaytwo.com/job/jaytwo.Http.Polly/job/develop/" alt="Build Status (develop)">
-    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=jaytwo.Http.Polly%2Fdevelop&subject=build%20(develop)" /></a>
+  <a href="https://jenkins.jaytwo.com/job/github-jakegough-jaytwo/job/jaytwo.Http.Polly/job/master/" alt="Build Status (master)">
+    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=github-jakegough-jaytwo%2Fjaytwo.Http.Polly%2Fmaster&subject=build%20(master)" /></a>
+  <a href="https://jenkins.jaytwo.com/job/github-jakegough-jaytwo/job/jaytwo.Http.Polly/job/develop/" alt="Build Status (develop)">
+    <img src="https://jenkins.jaytwo.com/buildStatus/icon?job=github-jakegough-jaytwo%2Fjaytwo.Http.Polly%2Fdevelop&subject=build%20(develop)" /></a>
 </p>
 
 <p align="center">
@@ -27,7 +27,7 @@ PM> Install-Package jaytwo.Http.Polly
 This builds on the `IHttpClient` abstraction from the `jaytwo.Http` package.  This is meant for use with the `jaytwo.FluentHttp` package.
 
 It provides two retry policies: 
-* a default retry policy that retries 3 times, waiting 1, 3, and then 5 seconds between retries.
+* a default retry policy that retries 3 times, waiting 1, 3, and then 5 seconds between retries
 * an exponential backoff retry policy, based on the [published AWS client retry behavior](https://docs.aws.amazon.com/sdkref/latest/guide/feature-retry-behavior.html)
 
 
